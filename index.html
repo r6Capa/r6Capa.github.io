@@ -1,80 +1,169 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Calculadora de Amigo Paguitos</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizz Amigo Paguitos</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
         }
 
-        h1 {
-            color: #333;
+        #header {
+            background-image: url('tu-imagen.jpg'); /* Cambia 'tu-imagen.jpg' por la URL de tu imagen */
+            background-size: cover;
+            background-position: center;
+            padding: 20px;
+            color: #fff;
         }
 
-        #calculator {
+        #container {
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             padding: 20px;
-            width: 300px;
+            width: 80%;
+            max-width: 400px;
             margin: 0 auto;
         }
 
-        input[type="number"], select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
+        h1 {
+            color: #007BFF;
         }
 
-        button {
+        #question {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            width: 80%;
             background-color: #007BFF;
             color: #fff;
             border: none;
-            padding: 10px 20px;
-            cursor: pointer;
             border-radius: 5px;
+            cursor: pointer;
         }
 
-        button:hover {
+        .option:hover {
             background-color: #0056b3;
         }
 
-        #resultado {
-            font-size: 20px;
+        #feedback {
+            font-size: 18px;
             margin-top: 20px;
+        }
+
+        #score {
+            font-size: 24px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        #exitButton {
+            background-color: #FF0000; /* Cambiar a color rojo */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+            margin: 0 auto; /* Centrar horizontalmente */
+        }
+
+        #exitButton:hover {
+            background-color: #CC0000; /* Cambiar el color al pasar el mouse */
         }
     </style>
 </head>
 <body>
-    <div id="calculator">
-	<img src="‪Imagen.jpg" alt="Imagen" width="377" height="133">
-        <h1>Calculadora Amigo Paguitos</h1>
-        <p>¿Cuánto cuesta tu <b>próximo smartphone</b>?:</p>
-        <input type="number" id="montoInput" min="100" max="10000">
-        <p>Selecciona el <b>número de semanas:</b></p>
-        <select id="opcionSelect">
-            <option value="26">26 Semanas</option>
-            <option value="39">39 Semanas</option>
-        </select>
-        <br><br>
-        <button onclick="calcular()">Calcular</button>
-        <p id="resultado"></p>
-	<br>
-        <button id="salirButton" onclick="salir()">Salir</button>
+    <div id="header">
+        <!-- Agrega tu imagen aquí -->
+    </div>
+    <div id="container">
+        <h1>Amigo Paguitos</h1>
+        <div id="question">1. Amigo Paguitos se define como:</div>
+        <button class="option" onclick="checkAnswer(1)">Respuesta 1</button>
+        <button class="option" onclick="checkAnswer(2)">Respuesta 2</button>
+        <button class="option" onclick="checkAnswer(3)">Respuesta 3</button>
+        <div id="feedback"></div> 	
+        <div id="score"></div>
+        <button id="exitButton" onclick="closeWindow()">Salir</button>
     </div>
 
     <script>
-        function calcular() {
-            var monto = parseFloat(document.getElementById("montoInput").value);
-            var opcion = parseFloat(document.getElementById("opcionSelect").value);
-            var resultado = monto / opcion;
-            document.getElementById("resultado").innerHTML = "LLaváte el smartphone por: <b>" + resultado.toFixed(2) + "</b> pesitos semanales";
+        const questions = [
+            {
+                question: '1. Amigo Paguitos se define como:',
+                options: ['Servicio de pagos Telcel', 'El Amigo Kit que siempre has querido en paguitos', 'Recargas desde 10 pesitos'],
+                correctAnswer: 2
+            },
+            {
+                question: '2. Requisitos para contratar Amigo Paguitos:',
+                options: ['INE / acta de nacimiento y Curp ', 'INE, Núm de Cel activo y e-mail', 'INE y Un padrino SMS'],
+                correctAnswer: 2
+            },
+            {
+                question: '3. Garantía de los Equipos de Amigo Paguitos:',
+                options: ['12 meses', '24 meses', '18 meses'],
+                correctAnswer: 1
+            },
+            {
+                question: '4. Puedes elegir entre mas de _____ Modelos. ',
+                options: ['200', '600', '400'],
+                correctAnswer: 3
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const feedback = document.getElementById('feedback');
+        const scoreDisplay = document.getElementById('score');
+        const exitButton = document.getElementById('exitButton');
+
+        function showQuestion(index) {
+            const questionElement = document.getElementById('question');
+            const options = document.querySelectorAll('.option');
+            
+            if (index < questions.length) {
+                questionElement.textContent = questions[index].question;
+                options.forEach((option, i) => {
+                    option.textContent = questions[index].options[i];
+                    option.onclick = () => checkAnswer(i + 1);
+                });
+            } else {
+                // Fin del cuestionario
+                questionElement.textContent = 'Cuestionario completado';
+                options.forEach(option => option.style.display = 'none');
+                scoreDisplay.textContent = `Calificación: ${score}`;
+                exitButton.style.display = 'block'; // Mostrar el botón después de completar el cuestionario
+            }
         }
-	function salir() {
-            window.close(); // Cierra la ventana actual del navegador
+
+        function checkAnswer(answer) {
+            if (answer === questions[currentQuestionIndex].correctAnswer) {
+                feedback.textContent = '¡Correcto!';
+                score += 25; // Suma 25 puntos por respuesta correcta
+            } else {
+                feedback.textContent = 'Incorrecto. Inténtalo de nuevo.';
+            }
+            currentQuestionIndex++;
+            showQuestion(currentQuestionIndex);
         }
+
+        function closeWindow() {
+            window.close(); // Cierra la ventana actual
+        }
+
+        showQuestion(currentQuestionIndex);
     </script>
 </body>
 </html>
