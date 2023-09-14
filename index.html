@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculadora de Amigo Paguitos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #calculator {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #resultado {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="calculator">
+	<img src="‪file:///C:/Users/QATB03C/Desktop/ap.jpg" alt="Imagen" width="377" height="133">
+        <h1>Calculadora Amigo Paguitos</h1>
+        <p>¿Cuánto cuesta tu <b>próximo smartphone</b>?:</p>
+        <input type="number" id="montoInput" min="100" max="10000">
+        <p>Selecciona el <b>número de semanas:</b></p>
+        <select id="opcionSelect">
+            <option value="26">26 Semanas</option>
+            <option value="39">39 Semanas</option>
+        </select>
+        <br><br>
+        <button onclick="calcular()">Calcular</button>
+        <p id="resultado"></p>
+	<br>
+        <button id="salirButton" onclick="salir()">Salir</button>
+    </div>
+
+    <script>
+        function calcular() {
+            var monto = parseFloat(document.getElementById("montoInput").value);
+            var opcion = parseFloat(document.getElementById("opcionSelect").value);
+            var resultado = monto / opcion;
+            document.getElementById("resultado").innerHTML = "LLaváte el smartphone por: <b>" + resultado.toFixed(2) + "</b> pesitos semanales";
+        }
+	function salir() {
+            window.close(); // Cierra la ventana actual del navegador
+        }
+    </script>
+</body>
+</html>
