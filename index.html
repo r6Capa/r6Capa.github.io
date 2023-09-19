@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quizz Amigo Paguitos</title>
+    <title>Juego de Palabras</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,157 +13,156 @@
             padding: 0;
         }
 
-        #header {
-            background-image: url('tu-imagen.jpg'); /* Cambia 'tu-imagen.jpg' por la URL de tu imagen */
-            background-size: cover;
-            background-position: center;
-            padding: 20px;
-            color: #fff;
-        }
-
         #container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            width: 80%;
-            max-width: 400px;
-            margin: 0 auto;
+            margin: 20px auto;
+            width: 400px;
         }
 
         h1 {
             color: #007BFF;
         }
 
-        #question {
-            font-size: 18px;
+        #instructions {
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        #word {
+            font-size: 24px;
             margin-bottom: 20px;
         }
 
-        .option {
-            display: block;
-            margin: 10px auto;
-            padding: 10px;
-            width: 80%;
+        #guess {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        #attempts {
+            font-size: 18px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #adivinarButton {
             background-color: #007BFF;
             color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
         }
 
-        .option:hover {
-            background-color: #0056b3;
-        }
-
-        #feedback {
-            font-size: 18px;
-            margin-top: 20px;
-        }
-
-        #score {
-            font-size: 24px;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-
-        #exitButton {
-            background-color: #FF0000; /* Cambiar a color rojo */
+        #verificarButton {
+            background-color: #4CAF50;
             color: #fff;
-            border: none;
-            padding: 10px 20px;
-            margin-top: 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            display: none;
-            margin: 0 auto; /* Centrar horizontalmente */
         }
 
-        #exitButton:hover {
-            background-color: #CC0000; /* Cambiar el color al pasar el mouse */
+        #reiniciarButton {
+            background-color: #FFC107;
+            color: #fff;
+        }
+
+        #salirButton {
+            background-color: #FF0000;
+            color: #fff;
+        }
+
+        #congratsLink {
+            color: #007BFF;
+            text-decoration: none;
+            display: none;
+        }
+
+        #congratsLink:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div id="header">
-        <!-- Agrega tu imagen aquí -->
-    </div>
     <div id="container">
-        <h1>Amigo Paguitos</h1>
-        <div id="question">1. Amigo Paguitos se define como:</div>
-        <button class="option" onclick="checkAnswer(1)">Respuesta 1</button>
-        <button class="option" onclick="checkAnswer(2)">Respuesta 2</button>
-        <button class="option" onclick="checkAnswer(3)">Respuesta 3</button>
-        <div id="feedback"></div> 	
-        <div id="score"></div>
-        <button id="exitButton" onclick="closeWindow()">Salir</button>
+        <h1>Juego de Palabras</h1>
+        <div id="instructions">
+            Adivina la palabra oculta. <b>Solo tienes 5 intentos.</b> Cada vez que coloques una <b>letra</b>, tendrás que dar clic en <b>"Adivina".</b> Una vez que tengas la palabra completa, da clic en <b>"Palabra Completa"</b> y hasta abajo de la página aparecerá el enlace para el siguiente nivel. ¡Suerte!
+        </div>
+        <div id="word"></div>
+        <input type="text" id="letterInput" placeholder="Ingresa una letra">
+        <button id="adivinarButton" onclick="checkLetter()">Adivinar</button>
+        <button id="verificarButton" onclick="verifyWord()">Palabra Completa</button>
+        <button id="reiniciarButton" onclick="resetGame()">Reiniciar</button>
+        <button id="salirButton" onclick="closeWindow()">Salir</button>
+        <div id="guess"></div>
+        <div id="attempts"></div>
+        <div id="congrats" style="display: none;"></div>
+        <a id="congratsLink" href="https://www.ejemplo.com" target="_blank" style="display: none;">Puedes avanzar a la siguiente fase haciendo clic aquí</a>
     </div>
 
     <script>
-        const questions = [
-            {
-                question: '1. Amigo Paguitos se define como:',
-                options: ['Servicio de pagos Telcel', 'El Amigo Kit que siempre has querido en paguitos', 'Recargas desde 10 pesitos'],
-                correctAnswer: 2
-            },
-            {
-                question: '2. Requisitos para contratar Amigo Paguitos:',
-                options: ['INE / acta de nacimiento y Curp ', 'INE, Núm de Cel activo y e-mail', 'INE y Un padrino SMS'],
-                correctAnswer: 2
-            },
-            {
-                question: '3. Garantía de los Equipos de Amigo Paguitos:',
-                options: ['12 meses', '24 meses', '18 meses'],
-                correctAnswer: 1
-            },
-            {
-                question: '4. Puedes elegir entre mas de _____ Modelos. ',
-                options: ['200', '600', '400'],
-                correctAnswer: 3
-            }
-        ];
+        const words = ['PAGUITOS', 'SEMANALES', 'GARANTIA', 'AMIGOKIT', 'VARIOSMODELOS']; // Lista de palabras posibles
+        let word = '';
+        let guessedWord = [];
+        let attempts = 5;
 
-        let currentQuestionIndex = 0;
-        let score = 0;
-        const feedback = document.getElementById('feedback');
-        const scoreDisplay = document.getElementById('score');
-        const exitButton = document.getElementById('exitButton');
+        function startGame() {
+            // Escoge una palabra aleatoria de la lista
+            word = words[Math.floor(Math.random() * words.length)];
+            guessedWord = Array(word.length).fill('_');
+            attempts = 5;
+            updateUI();
+        }
 
-        function showQuestion(index) {
-            const questionElement = document.getElementById('question');
-            const options = document.querySelectorAll('.option');
-            
-            if (index < questions.length) {
-                questionElement.textContent = questions[index].question;
-                options.forEach((option, i) => {
-                    option.textContent = questions[index].options[i];
-                    option.onclick = () => checkAnswer(i + 1);
-                });
+        function updateUI() {
+            document.getElementById('word').textContent = guessedWord.join(' ');
+            document.getElementById('attempts').textContent = `Intentos restantes: ${attempts}`;
+        }
+
+        function checkLetter() {
+            const letterInput = document.getElementById('letterInput');
+            const letter = letterInput.value.toUpperCase();
+            letterInput.value = '';
+
+            if (word.includes(letter)) {
+                for (let i = 0; i < word.length; i++) {
+                    if (word[i] === letter) {
+                        guessedWord[i] = letter;
+                    }
+                }
             } else {
-                // Fin del cuestionario
-                questionElement.textContent = 'Cuestionario completado';
-                options.forEach(option => option.style.display = 'none');
-                scoreDisplay.textContent = `Calificación: ${score}`;
-                exitButton.style.display = 'block'; // Mostrar el botón después de completar el cuestionario
+                attempts--;
+            }
+
+            if (attempts === 0) {
+                document.getElementById('guess').textContent = `Perdiste. La palabra era "${word}".`;
+            }
+
+            updateUI();
+        }
+
+        function verifyWord() {
+            const guessed = guessedWord.join('').toUpperCase();
+            if (guessed === word) {
+                document.getElementById('guess').textContent = '¡Felicidades, has ganado!';
+                document.getElementById('congrats').style.display = 'block';
+                document.getElementById('congratsLink').style.display = 'block';
+            } else {
+                document.getElementById('guess').textContent = 'La palabra no es correcta. Sigue intentando.';
             }
         }
 
-        function checkAnswer(answer) {
-            if (answer === questions[currentQuestionIndex].correctAnswer) {
-                feedback.textContent = '¡Correcto!';
-                score += 25; // Suma 25 puntos por respuesta correcta
-            } else {
-                feedback.textContent = 'Incorrecto.';
-            }
-            currentQuestionIndex++;
-            showQuestion(currentQuestionIndex);
+        function resetGame() {
+            startGame();
+            document.getElementById('guess').textContent = '';
+            document.getElementById('congrats').style.display = 'none';
+            document.getElementById('congratsLink').style.display = 'none';
         }
 
         function closeWindow() {
-            window.close(); // Cierra la ventana actual
+            window.close();
         }
 
-        showQuestion(currentQuestionIndex);
+        startGame();
     </script>
 </body>
 </html>
+
