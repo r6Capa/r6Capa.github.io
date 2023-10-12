@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Palabras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            margin: 20px auto;
+            width: 400px;
+        }
+
+        h1 {
+            color: #007BFF;
+        }
+
+        #instructions {
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        #word {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #guess {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        #attempts {
+            font-size: 18px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #adivinarButton {
+            background-color: #007BFF;
+            color: #fff;
+        }
+
+        #verificarButton {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+        #reiniciarButton {
+            background-color: #FFC107;
+            color: #fff;
+        }
+
+        #salirButton {
+            background-color: #FF0000;
+            color: #fff;
+        }
+
+        #congratsLink {
+            color: #007BFF;
+            text-decoration: none;
+            display: none;
+        }
+
+        #congratsLink:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Juego de Palabras</h1>
+        <div id="instructions">
+            Adivina la palabra oculta. <b>Solo tienes 5 intentos.</b> Cada vez que coloques una <b>letra</b>, tendrás que dar clic en <b>"Adivina".</b> Una vez que tengas la palabra completa, da clic en <b>"Palabra Completa"</b> y hasta abajo de la página aparecerá el enlace para el siguiente nivel. ¡Suerte!
+        </div>
+        <div id="word"></div>
+        <input type="text" id="letterInput" placeholder="Ingresa una letra">
+        <button id="adivinarButton" onclick="checkLetter()">Adivinar</button>
+        <button id="verificarButton" onclick="verifyWord()">Palabra Completa</button>
+        <button id="reiniciarButton" onclick="resetGame()">Reiniciar</button>
+        <button id="salirButton" onclick="closeWindow()">Salir</button>
+        <div id="guess"></div>
+        <div id="attempts"></div>
+        <div id="congrats" style="display: none;"></div>
+        <a id="congratsLink" href="https://www.ejemplo.com" target="_blank" style="display: none;"><br>Puedes avanzar a la siguiente fase haciendo clic aquí</a>
+    </div>
+
+    <script>
+        const words = ['PAGUITOS', 'SEMANALES', 'GARANTIA', 'AMIGOKIT', 'VARIOSMODELOS']; // Lista de palabras posibles
+        let word = '';
+        let guessedWord = [];
+        let attempts = 5;
+
+        function startGame() {
+            // Escoge una palabra aleatoria de la lista
+            word = words[Math.floor(Math.random() * words.length)];
+            guessedWord = Array(word.length).fill('_');
+            attempts = 5;
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById('word').textContent = guessedWord.join(' ');
+            document.getElementById('attempts').textContent = `Intentos restantes: ${attempts}`;
+        }
+
+        function checkLetter() {
+            const letterInput = document.getElementById('letterInput');
+            const letter = letterInput.value.toUpperCase();
+            letterInput.value = '';
+
+            if (word.includes(letter)) {
+                for (let i = 0; i < word.length; i++) {
+                    if (word[i] === letter) {
+                        guessedWord[i] = letter;
+                    }
+                }
+            } else {
+                attempts--;
+            }
+
+            if (attempts === 0) {
+                document.getElementById('guess').textContent = `Perdiste. La palabra era "${word}".`;
+            }
+
+            updateUI();
+        }
+
+        function verifyWord() {
+            const guessed = guessedWord.join('').toUpperCase();
+            if (guessed === word) {
+                document.getElementById('guess').textContent = '¡Felicidades, has ganado!';
+                document.getElementById('congrats').style.display = 'block';
+                document.getElementById('congratsLink').style.display = 'block';
+            } else {
+                document.getElementById('guess').textContent = 'La palabra no es correcta. Sigue intentando.';
+            }
+        }
+
+        function resetGame() {
+            startGame();
+            document.getElementById('guess').textContent = '';
+            document.getElementById('congrats').style.display = 'none';
+            document.getElementById('congratsLink').style.display = 'none';
+        }
+
+        function closeWindow() {
+            window.close();
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
