@@ -161,7 +161,15 @@
                 optionButtons.forEach(option => option.style.display = 'none');
 
                 if (score === 100) {
-                    feedback.textContent = '¡Felicidades! Calificación perfecta (100). Puedes avanzar al paso 2 haciendo clic aquí.';
+                    // feedback.textContent = '¡Felicidades! Calificación perfecta (100). Puedes avanzar al paso 2 haciendo clic aquí.';
+                    const linkToNextStep = document.createElement('a');
+                    linkToNextStep.href = 'https://r6capa.github.io/4horcado.html'; // Agregar el enlace
+                    linkToNextStep.textContent = '¡PERFECTO! Puedes avanzar al paso 2 de Amigo Paguitos, haciendo clic a este enlace.';
+                    linkToNextStep.style.fontWeight = 'bold';
+                    linkToNextStep.style.textDecoration = 'none'; // Eliminar subrayado
+                    linkToNextStep.style.color = 'blue'; // Color azul
+                    feedback.textContent = ''; // Eliminar el texto anterior
+                    feedback.appendChild(linkToNextStep);
                 } else {
                     feedback.textContent = `Calificación: ${score}`;
 
@@ -186,7 +194,7 @@
         }
 
         function restartGame() {
-            window.location.href = "https://www.capa.com";
+            window.location.href = "https://r6capa.github.io/";
         }
 
         function closeWindow() {
