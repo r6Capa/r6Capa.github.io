@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Amigo Paguitos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .game-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #666;
+        }
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button.red {
+            background-color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>RETO 3 de 3 <br> Adivina el monto</h1>
+        <p>No recuerdo cuánto es el paguito de esta semana. El monto está <b>entre 1 y 100</b> pesos. Tienes solo <b>5 intentos</b> para adivinar, ¿Puedes lograrlo? Al         colocar el número, se indicará si el monto es <b>menor o mayor</b> ¡Éxito!  </p>
+        <input type="number" id="guess" min="1" max="100">
+        <button onclick="checkGuess()">Adivinar</button>
+        <p id="message"></p>
+        <button id="restart" onclick="restartGame()">Reiniciar</button>
+        <button class="red" onclick="closeWindow()">Salir</button>
+    </div>
+
+    <script>
+        let precioAmigoPaguitos;
+        let intentos = 0;
+
+        function startGame() {
+            precioAmigoPaguitos = Math.floor(Math.random() * 101);
+            intentos = 0;
+            document.getElementById("guess").value = "";
+            document.getElementById("message").innerHTML = "";
+            document.getElementById("restart").style.display = "none";
+        }
+
+        function checkGuess() {
+            const guess = parseInt(document.getElementById("guess").value);
+            intentos++;
+
+            if (intentos <= 4) {
+                if (guess === precioAmigoPaguitos) {
+                   // document.getElementById("message").innerHTML = `¡Felicidades! Adivinaste el precio de Amigo Paguitos (${precioAmigoPaguitos} pesos) en                       ${intentos} intentos.`;
+
+	        const linkToGoogle = `<a href="http://www.google.com" style="color: blue; text-decoration: none; font-weight: bold;">El mensaje final del RETO                 AMIGO PAGUITOS dando clic a este enlace.</a>`;
+                document.getElementById("message").innerHTML = `¡Felicidades! Adivinaste el precio de Amigo Paguitos (${precioAmigoPaguitos} pesos) en ${intentos}                      intentos. Visita ${linkToGoogle} .`;                    
+                    document.getElementById("restart").style.display = "block";
+                } else if (guess < precioAmigoPaguitos) {
+                    document.getElementById("message").innerHTML = "El precio es <b>mayor</b>. Intenta de nuevo.";
+                } else {
+                    document.getElementById("message").innerHTML = "El precio es <b>menor</b>. Intenta de nuevo.";
+                }
+            } else {
+                document.getElementById("message").innerHTML = `¡Lo siento! Has agotado tus <b>5 intentos</b>. El precio de Amigo Paguitos era ${precioAmigoPaguitos} pesos.`;
+                document.getElementById("restart").style.display = "block";
+            }
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        function closeWindow() {
+            window.close(); // Cierra la ventana actual
+        }
+
+        // Comienza el juego al cargar la página
+        window.onload = startGame;
+    </script>
+</body>
+</html>
