@@ -14,18 +14,30 @@
         }
 
         #container {
-            margin: 20px auto;
-            width: 400px;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 10px;
         }
 
         h1 {
             color: #007BFF;
         }
 
-        #instructions {
-            font-size: 14px;
-            margin-bottom: 10px;
-            text-align: left;
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        #letterInput {
+            width: 100%;
+            font-size: 18px;
+            padding: 10px;
+            margin: 10px 0;
         }
 
         #word {
@@ -33,79 +45,44 @@
             margin-bottom: 20px;
         }
 
-        #guess {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        #attempts {
-            font-size: 18px;
-        }
-
-        button {
-            padding: 10px 20px;
-            margin: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #adivinarButton {
-            background-color: #007BFF;
-            color: #fff;
-        }
-
-        #verificarButton {
-            background-color: #4CAF50;
-            color: #fff;
-        }
-
-        #reiniciarButton {
-            background-color: #FFC107;
-            color: #fff;
-        }
-
-        #salirButton {
-            background-color: #FF0000;
-            color: #fff;
-        }
-
         #congratsLink {
             color: #007BFF;
             text-decoration: none;
             display: none;
         }
-
-        #congratsLink:hover {
-            text-decoration: underline;
+        
+        .guessed-letter {
+            display: inline-block;
+            width: 20px;
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
     <div id="container">
-        <h1>RETO 2 de 3 ¡Juego de Palabras!</h1>
+        <h1>RETO 2 de 3 <br> ¡Juego de Palabras!</h1>
         <div id="instructions">
-            Adivina la palabra oculta. <b>Solo tienes 5 intentos.</b> Cada vez que coloques <b>una letra</b>, tendrás que dar clic en <b>"Adivina".</b> Una vez que tengas la palabra completa, da clic en <b>"Palabra Completa"</b> y hasta abajo de la página aparecerá el enlace para el siguiente RETO ¡Suerte!
+            Adivina la palabra oculta. <b>Solo tienes 5 intentos.</b> Cada vez que coloques <b>una letra</b>, tendrás que dar clic en <b>"Adivina".</b> Una vez que tengas la palabra completa, da clic en <b>"Palabra Completa"</b> y hasta abajo de la página aparecerá el enlace para el siguiente RETO ¡Suerte! <br><br>
         </div>
+        <div id="attempts"></div> <!-- Mueve esto aquí -->
+        <input type="text" id="letterInput" placeholder="Letra">
         <div id="word"></div>
-        <input type="text" id="letterInput" placeholder="Ingresa una letra">
-        <button id="adivinarButton" onclick="checkLetter()">Adivinar</button>
-        <button id="verificarButton" onclick="verifyWord()">Palabra Completa</button>
-        <button id="reiniciarButton" onclick="resetGame()">Reiniciar</button>
-        <button id="salirButton" onclick="closeWindow()">Salir</button>
-        <div id="guess"></div>
-        <div id="attempts"></div>
+        <button id="adivinarButton" onclick="checkLetter()" style="background-color: #007BFF;">Adivinar</button>
+        <button id="verificarButton" onclick="verifyWord()" style="background-color: #4CAF50;">Palabra Completa</button>
+        <button id="reiniciarButton" onclick="resetGame()" style="background-color: #FFC107;">Reiniciar</button>
+        <button id="salirButton" onclick="closeWindow()" style="background-color: #FF0000;">Salir</button>
+        <div id="guess" style="margin-top: 20px;"></div>
         <div id="congrats" style="display: none;"></div>
         <a id="congratsLink" href="https://r6capa.github.io/Pago.html" target="_blank" style="display: none;"><br><b>Puedes avanzar al RETO 3 de 3 de AMIGO PAGUITOS dando clic a este enlace.</b></a>
     </div>
 
     <script>
-        const words = ['PAGUITOS', 'OFRECIMIENTO', 'MARCAS', 'SEMANALES', 'GARANTIA', 'AMIGOKIT', 'MODELOS']; // Lista de palabras posibles
+        const words = ['PAGUITOS', 'OFRECIMIENTO', 'MARCAS', 'SEMANALES', 'GARANTIA', 'AMIGOKIT', 'MODELOS'];
         let word = '';
         let guessedWord = [];
         let attempts = 5;
 
         function startGame() {
-            // Escoge una palabra aleatoria de la lista
             word = words[Math.floor(Math.random() * words.length)];
             guessedWord = Array(word.length).fill('_');
             attempts = 5;
@@ -113,7 +90,16 @@
         }
 
         function updateUI() {
-            document.getElementById('word').textContent = guessedWord.join(' ');
+            // Construir la cadena con espacios entre las letras adivinadas
+            const formattedWord = guessedWord.map(letter => {
+                if (letter === '_') {
+                    return '<span class="guessed-letter">_</span>';
+                } else {
+                    return `<span class="guessed-letter">${letter}</span>`;
+                }
+            }).join(' ');
+            document.getElementById('word').innerHTML = formattedWord;
+
             document.getElementById('attempts').textContent = `Intentos restantes: ${attempts}`;
         }
 
