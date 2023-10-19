@@ -47,10 +47,11 @@
 <body>
     <div class="game-container">
         <h1>RETO 3 de 3 <br> Adivina el monto</h1>
-        <p>No recuerdo cuánto es el paguito de esta semana. El monto está <b>entre 1 y 100</b> pesos. Tienes solo <b>5 intentos</b> para adivinar, ¿Puedes lograrlo? Al         colocar el número, se indicará si el monto es <b>menor o mayor</b> ¡Éxito!  </p>
+        <p>No recuerdo cuánto es el paguito de esta semana. El monto está <b>entre 1 y 100</b> pesos. Tienes solo <b>5 intentos</b> para adivinar, ¿Puedes lograrlo? Al colocar el número, se indicará si el monto es <b>menor o mayor</b> ¡Éxito!</p>
         <input type="number" id="guess" min="1" max="100">
         <button onclick="checkGuess()">Adivinar</button>
         <p id="message"></p>
+        <p><span id="attempts">Intentos: 0</span></p> <!-- Agregamos este mensaje de intentos -->
         <button id="restart" onclick="restartGame()">Reiniciar</button>
         <button class="red" onclick="closeWindow()">Salir</button>
     </div>
@@ -73,10 +74,8 @@
 
             if (intentos <= 4) {
                 if (guess === precioAmigoPaguitos) {
-                   // document.getElementById("message").innerHTML = `¡Felicidades! Adivinaste el precio de Amigo Paguitos (${precioAmigoPaguitos} pesos) en                       ${intentos} intentos.`;
-
-	        const linkToGoogle = `<a href="r6Capa.github.io/MensajeFinal.HTML" style="color: blue; text-decoration: none; font-weight: bold;">El mensaje final del RETO                 AMIGO PAGUITOS dando clic a este enlace.</a>`;
-                document.getElementById("message").innerHTML = `¡Felicidades! Adivinaste el precio de Amigo Paguitos (${precioAmigoPaguitos} pesos) en ${intentos}                      intentos. Visita ${linkToGoogle} .`;                    
+                    const linkToGoogle = `<a href="https://capar6.my.canva.site/amigo-paguitos-final" style="color: blue; text-decoration: none; font-weight: bold;">El mensaje final del RETO AMIGO PAGUITOS dando clic a este enlace.</a>`;
+                    document.getElementById("message").innerHTML = `¡Felicidades! Adivinaste el precio de Amigo Paguitos (${precioAmigoPaguitos} pesos) en ${intentos} intentos. Visita ${linkToGoogle} .`;
                     document.getElementById("restart").style.display = "block";
                 } else if (guess < precioAmigoPaguitos) {
                     document.getElementById("message").innerHTML = "El precio es <b>mayor</b>. Intenta de nuevo.";
@@ -87,10 +86,15 @@
                 document.getElementById("message").innerHTML = `¡Lo siento! Has agotado tus <b>5 intentos</b>. El precio de Amigo Paguitos era ${precioAmigoPaguitos} pesos.`;
                 document.getElementById("restart").style.display = "block";
             }
+
+            // Actualizamos el contador de intentos
+            document.getElementById("attempts").innerHTML = `Intentos: ${intentos}`;
         }
 
         function restartGame() {
             startGame();
+            // Limpiamos el mensaje de intentos
+            document.getElementById("attempts").innerHTML = "Intentos: 0";
         }
 
         function closeWindow() {
