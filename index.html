@@ -176,6 +176,10 @@
                     if (score < 100) {
                         document.getElementById('restart').style.display = 'block';
                     }
+                    // Muestra el mensaje de intento fallido si la calificación es menor a 100
+                    if (score < 100) {
+                        feedback.innerHTML += '<br><br>Intento fallido, debes contestar correctamente las 4 preguntas. Da clic en REINICIAR para volver a intentarlo.';
+                    }
                 }
 
                 exitButton.style.display = 'block';
